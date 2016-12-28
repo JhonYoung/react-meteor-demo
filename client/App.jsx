@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { Row, Col } from 'antd';
+
 import Header from './layout/Header.jsx'; 
-import Menu from './layout/Menu.jsx'; 
+import Sider from './layout/Sider.jsx'; 
 import Content from './layout/Content.jsx';
 
 export default class App extends Component {
@@ -16,8 +18,14 @@ export default class App extends Component {
     return (
       <div className="container">
         <Header></Header>
-        <Menu></Menu>
-        <Content></Content>
+        <Row>
+          <Col span={4}>
+            <Sider></Sider>
+          </Col>
+          <Col span={20}>
+            <Content></Content>
+          </Col>
+        </Row>
       </div>
     );
   }
