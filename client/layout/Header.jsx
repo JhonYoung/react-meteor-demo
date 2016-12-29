@@ -1,20 +1,20 @@
-import { Menu, Icon, Row, Col} from 'antd';
 import React, { Component } from 'react';
+import { Menu, Row, Col} from 'antd';
 
-const SubMenu = Menu.SubMenu;
-class Header extends Component {
-  render() {
-    return (
-        <div className="layout-aside">
-          <Menu theme="light" mode="horizontal"
-            defaultSelectedKeys={['2']} style={{lineHeight: '48px'}}>
-            <Row>
-              <Col span={10} offset={1}><h2 key="title">多啦衣梦-仓储管理系统</h2></Col>
-              <Col span={4} offset={8}>col-6 col-pull-18</Col>
-            </Row>
-          </Menu>
-        </div>
-    );
-  }
-}
+let Header = React.createClass({
+    getInitialState() {
+      return {
+        title: '多啦衣梦-仓储管理系统',
+        staff: "耿向美"
+      };
+    },
+    render() {
+      return (
+        <Row style={{lineHeight: '48px'}}>
+          <Col span={15} offset={1}><h2 key="title">{this.state.title}</h2></Col>
+          <Col span={3} offset={5}>{this.state.staff}</Col>
+        </Row>
+      );
+    }
+})
 export default Header;
