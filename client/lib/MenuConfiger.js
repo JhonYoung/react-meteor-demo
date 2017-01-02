@@ -28,7 +28,7 @@ let config = {
 		{
 			name: "订单管理",
 			group: "orders",
-			roles: "main",
+			roles: "orders",
 			children: [
 				{
 					name: "当前订单",
@@ -51,7 +51,7 @@ let config = {
 		{
 			name: "库存管理",
 			group: "clothes",
-			roles: "main",
+			roles: "orders",
 			children: [
 				{
 					name: "款式列表",
@@ -74,5 +74,4 @@ let config = {
 		}
 	]
 }
-
 export default config;

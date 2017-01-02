@@ -26,9 +26,7 @@ let Sider = React.createClass ({
 	      	onClick={this.handleClick} 
 	      	defaultOpenKeys={['sub1']}
 	        selectedKeys={[this.state.current]}
-	        mode="inline"
-	        st
-	      	>
+	        mode="inline">
 	      		{
 	      			config.MenuConfig.map( function (item, index) {
 	      				return (<Menu.SubMenu key= {item.roles + index} 
