@@ -9,6 +9,8 @@ import config from "./lib/MenuConfiger";
 import App from './layout/App.jsx';
 import Login from './layout/Login.jsx';
 
+Meteor.subscribe("current_users");
+
 let menuItems = [];
 _.map(config.MenuConfig, function (doc) {
 	menuItems = menuItems.concat(doc.children);

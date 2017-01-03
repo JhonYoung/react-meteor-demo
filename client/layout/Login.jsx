@@ -1,22 +1,37 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Checkbox, Row, Col} from 'antd';
+import { Form, Icon, Input, Button, Checkbox, Row, Col, message} from 'antd';
+import {LoginMessage} from '../lib/constant';
 const FormItem = Form.Item;
 
 let Login = Form.create()(React.createClass ({
+  contextTypes: {
+    router: React.PropTypes.object
+  },
 	handleSubmit(e) {
 	  e.preventDefault();
 	  let that = this;
 	  this.props.form.validateFields((err, values) => {
 	    if (!err) {
-	        console.log('Received values of form: ', values);
-	        Meteor.loginWithPassword(values.user, values.password, function (err, res) {
-	        	console.log("login success");
-	        })
+        setTimeout(message.loading("登录中..."), 1000);
+        Meteor.loginWithPassword(values.user, values.password, function (err, res) {
+          if (err) {
+            message.error(LoginMessage[err.reason.replace(/(^\s*)|(\s*$)/g, "")])
+          } else {
+            let user = Meteor.user() || {};
+            if (!user.staff) {
+              Meteor.logout();
+              localStorage.removeItem("users");
+              message.error("您当前不是员工账号！");
+              return;
+            }
+            localStorage.setItem("users", JSON.stringify(_.pick(user, ["staff", "mobile", "store", "roles"])));
+            that.context.router.push('/home');
+          }
+        })
 	    }
 	  });
-
-
 	},
+
 	render() {
 	  const { getFieldDecorator } = this.props.form;
 	  return (
@@ -52,7 +67,6 @@ let Login = Form.create()(React.createClass ({
   	    	  </FormItem>
   	    	</Form>
   	      </Col>
-  	     
   	   </Row>
 	    
 	  );
