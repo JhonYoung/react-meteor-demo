@@ -16,6 +16,14 @@ _.map(config.MenuConfig, function (doc) {
 	menuItems = menuItems.concat(doc.children);
 });
 
+//后期可用来做权限验证，当前未登则跳转到登陆页面
+const requireAuth = (nextState, replace) => {
+  if (!Meteor.userId()) {
+    replace({ pathname: '/login' })
+  }
+}
+
+
 Meteor.startup(() => {
   render(
   	(<Router history={hashHistory}>
@@ -23,7 +31,7 @@ Meteor.startup(() => {
         <div>fsdf</div>
         {
           menuItems.map( function ({component, roles}) {
-            return (<Route path={roles} component={component}/>)
+            return (<Route path={roles} component={component} onEnter={requireAuth}/>)
           })
         }
         <IndexRedirect to="homepage" />
