@@ -4,7 +4,6 @@ import { render } from 'react-dom';
 import {_} from "lodash";
 import { Router, Route, hashHistory, IndexRedirect} from 'react-router';
 
-
 import config from "./lib/MenuConfiger";
 import App from './layout/App.jsx';
 import Login from './layout/Login.jsx';

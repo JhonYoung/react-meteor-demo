@@ -40,17 +40,15 @@ let Header = React.createClass({
 
   render() {
     return (
-      <Row style={{lineHeight: '48px'}}>
-
+      <Row style={{lineHeight: '48px'}} justify="space-around">
         <Col span={1} offset={1}><Icon type={this.state.menu} onClick={this.ToggleMenu}/></Col>
-        <Col span={14}><h2 key="title">{this.state.title}</h2></Col>
-        <Col span={3} offset={5}>
+        <Col span={17} offset={1} xs={17} sm={17}><h2 key="title">{this.state.title}</h2></Col>
+        <Col span={4} xs={4} sm={4} justify="end">
           <Dropdown overlay={this.menu()} trigger={['click']}>
             <a className="ant-dropdown-link" href="#">
               {this.state.staffName}  <Icon type="down" />
             </a>
           </Dropdown>
-          
         </Col>
       </Row>
     );
