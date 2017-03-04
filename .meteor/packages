@@ -21,3 +21,6 @@ shell-server@0.2.1            # Server-side component of the `meteor shell` comm
 react-meteor-data
 accounts-ui
 accounts-password
+jparker:crypto-md5
+jparker:crypto-core
+http

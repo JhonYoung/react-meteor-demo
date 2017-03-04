@@ -15,11 +15,12 @@ _.map(config.MenuConfig, function (doc) {
 	menuItems = menuItems.concat(doc.children);
 });
 
-//后期可用来做权限验证，当前未登则跳转到登陆页面
+// 后期可用来做权限验证，当前未登则跳转到登陆页面
 const requireAuth = (nextState, replace) => {
-  if (!Meteor.userId()) {
-    replace({ pathname: '/login' })
-  }
+  // if (!Meteor.userId()) {
+  //   replace({ pathname: '/login' })
+  // }
+  return true;
 }
 
 
