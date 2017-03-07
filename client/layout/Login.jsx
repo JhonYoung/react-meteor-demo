@@ -8,13 +8,20 @@ let sign;
 let Login = Form.create()(React.createClass ({
   getInitialState: function () {
     return {
-      showTips: "获取验证码",
-      verifyBtn: false
+      showTips: "获取验证码", //验证，码提示文字
+      verifyBtn: false // 设定验证码不能重复点击
     }
   },
-
   contextTypes: {
     router: React.PropTypes.object
+  },
+  verifyMobile: (mobile) => {
+    reg = /^0?1[3|4|7|5|6|8|9|][0-9]\d{8}$/;
+    if (!reg.test(mobile)){
+      message.error("您必须输入正确的电话号码", 1000);
+      return false;
+    }
+    return true;
   },
 
 	handleSubmit(e) {
@@ -23,7 +30,8 @@ let Login = Form.create()(React.createClass ({
       veriCode = this.props.form.getFieldValue("verifyCode"),
       mobile = this.props.form.getFieldValue("mobile"),
       data = {},
-      {vUrl} = Meteor.settings.restful;
+      user = {},
+      {vUrl, login} = Meteor.settings.public.restful, authKey, expiredAt;
 
     if (!that.verifyMobile(mobile)) {
       return;
@@ -33,55 +41,34 @@ let Login = Form.create()(React.createClass ({
       message.error("您必须输入验证码", 1000);
       return;
     }
-
-    debugger;
     data = {mobile, veriCode, sign}
 
-    DORA.promise("POST", vcUrl, data).then(function (res) {
+    DORA.promise("POST", vUrl, data).then(function (res) {
       let content = JSON.parse(res.content)|| {};
       if (content.statusCode !== 200) {
-        message.error(`发送验证码错误: ${content.msg}`, 2000);
+        message.error(`验证码错误: ${content.msg}`, 2000);
+      } else {
+        return content;
       }
-
-      console.log(res);
-    }, function (error){
-      console.log("error", error)
+    }).then( function (doc) {
+      if (!doc) {
+        message.error(`验证错误`, 2000);
+      } else {
+        authKey = doc.authKey;
+        expiredAt= doc.expiredAt;
+        return DORA.promise("POST", login, {mobile, authKey});
+      } 
+    }).then(function (res) {
+      if(!res) {
+        message.error(`登录错误！`, 2000);
+      }
+      user = (JSON.parse(res.content)|| {}).data.user;
+      let {_id} = user;
+      DORA.setUser(user);
+      Accounts.makeClientLoggedIn(_id, authKey, new Date(expiredAt));
+      that.context.router.push('/home');
     });
-
-
-
-	  // this.props.form.validateFields((err, values) => {
-	  //   if (!err) {
-   //      setTimeout(message.loading("登录中..."), 1000);
-   //      Meteor.loginWithPassword(values.user, values.password, function (err, res) {
-   //        if (err) {
-   //          message.error(LoginMessage[err.reason.replace(/(^\s*)|(\s*$)/g, "")])
-   //        } else {
-   //          let user = Meteor.user() || {};
-   //          if (!user.staff) {
-   //            Meteor.logout();
-   //            localStorage.removeItem("users");
-   //            message.error("您当前不是员工账号！");
-   //            return;
-   //          }
-   //          localStorage.setItem("users", JSON.stringify(_.pick(user, ["staff", "mobile", "store", "roles"])));
-            
-   //        }
-   //      })
-	  //   }
-	  // });
-
-    // that.context.router.push('/home');
 	},
-
-  verifyMobile: (mobile) => {
-    reg = /^0?1[3|4|7|5|6|8|9|][0-9]\d{8}$/;
-    if (!reg.test(mobile)){
-      message.error("您必须输入正确的电话号码", 1000);
-      return false;
-    }
-    return true;
-  },
 
   getVerifyCode(e) {
     let mobile = this.props.form.getFieldValue("mobile"),
@@ -102,7 +89,6 @@ let Login = Form.create()(React.createClass ({
       sign: sign,
       sendToBound: true
     }
-
     DORA.promise("POST", vcUrl, data).then(function (res) {
       let content = JSON.parse(res.content)|| {};
       if (content.statusCode !== 200) {

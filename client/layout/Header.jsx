@@ -6,7 +6,7 @@ let Header = React.createClass({
     router: React.PropTypes.object
   },
   getInitialState() {
-    let user = JSON.parse(localStorage.getItem("users")) || {};
+    let user = DORA.getUser();
     return {
       title: '多啦衣梦-仓储管理系统',
       staffName: (user.staff || {}).name || "暂无",

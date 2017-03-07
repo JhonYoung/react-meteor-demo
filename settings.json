@@ -8,7 +8,8 @@
 			"url": "http://localhost:5000",
 			"appkey": "37e08411ef0e84597e073c53c2c7fe5d",
 			"vcUrl": "http://localhost:5000/app/user/mobile/verify/create",
-			"vUrl": "/app/user/mobile/verify"
+			"vUrl": "http://localhost:5000/app/user/mobile/verify",
+			"login": "http://localhost:5000/app/user/login/mobile"
 		}
 	}
 }
